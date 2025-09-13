@@ -1,18 +1,25 @@
 {
   "name": "proyecto-botton",
   "version": "1.0.0",
-  "description": "",
+  "description": "API modular para subir y listar imágenes (Express + Multer + Postgres)",
   "type": "module",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon index.js",
+    "test": "echo \"No tests\" && exit 0"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/crisMdn/boton---para-web-.git"
   },
-  "keywords": [],
+  "keywords": [
+    "express",
+    "api",
+    "uploads",
+    "multer",
+    "postgres"
+  ],
   "author": "",
   "license": "ISC",
   "bugs": {
@@ -21,9 +28,12 @@
   "homepage": "https://github.com/crisMdn/boton---para-web-#readme",
   "dependencies": {
     "cors": "^2.8.5",
-    "dotenv": "^17.2.2",
+    "dotenv": "^16.6.1",
     "express": "^5.1.0",
     "multer": "^2.0.2",
     "pg": "^8.16.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
   }
 }
