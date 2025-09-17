@@ -8,6 +8,7 @@ import { Pool } from "pg";
 import path from "path";
 import crypto from "crypto";
 import cors from "cors";
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 
 // 3) App y config base
 const app = express();
@@ -23,28 +24,28 @@ const pool = new Pool({
     "postgres://canelito:1234@localhost:5432/botton"
 });
 
-// 5) Multer (destino y validación)
-const storage = multer.diskStorage({
-  destination: "uploads",
-  filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname || "");
-    cb(null, crypto.randomBytes(16).toString("hex") + ext);
-  }
-});
+// 5) R2 (S3 compatible) + Multer en memoria
 const allowed = new Set(["image/jpeg","image/png","image/webp","image/gif"]);
+
+const s3 = new S3Client({
+  region: "auto",
+  endpoint: process.env.R2_ENDPOINT,            // ej: https://<id>.r2.cloudflarestorage.com
+  credentials: {
+    accessKeyId: process.env.R2_ACCESS_KEY_ID,
+    secretAccessKey: process.env.R2_SECRET_ACCESS_KEY,
+  },
+});
+
 const upload = multer({
-  storage,
+  storage: multer.memoryStorage(),
   limits: { fileSize: 10 * 1024 * 1024, files: 20 },
-  fileFilter: (req, file, cb) => {
+  fileFilter: (_req, file, cb) => {
     if (!allowed.has(file.mimetype)) return cb(new Error("Tipo no permitido"));
     cb(null, true);
   }
 });
 
-// 6) Estáticos
-app.use("/uploads", express.static("uploads"));
-
-// 7) Endpoints
+// 6) Endpoints
 app.post("/upload", upload.array("images", 20), async (req, res) => {
   if (!req.files?.length) return res.status(400).json({ error: "sin archivos" });
 
@@ -52,10 +53,23 @@ app.post("/upload", upload.array("images", 20), async (req, res) => {
   try {
     const out = [];
     for (const f of req.files) {
-      const url = `${PUBLIC_HOST}/uploads/${f.filename}`;
+      const ext = path.extname(f.originalname || "");
+      const key = crypto.randomBytes(16).toString("hex") + ext;
+
+      // subir a R2
+      await s3.send(new PutObjectCommand({
+        Bucket: process.env.R2_BUCKET,         // ej: imagenes-api
+        Key: key,
+        Body: f.buffer,
+        ContentType: f.mimetype,
+      }));
+
+      // URL pública (usa tu Public Development URL .r2.dev)
+      const url = `${process.env.R2_PUBLIC_URL}/${key}`;
+
       const r = await client.query(
         "INSERT INTO images(filename, url) VALUES($1,$2) RETURNING id, url, uploaded_at",
-        [f.filename, url]
+        [key, url]
       );
       out.push(r.rows[0]);
     }
@@ -80,7 +94,7 @@ app.get("/images", async (_req, res) => {
   }
 });
 
-// Página simple de prueba
+// Página simple de prueba (TU HTML)
 app.get("/", (_req, res) => {
   res.type("html").send(`
 <!doctype html>
@@ -302,6 +316,9 @@ app.get("/", (_req, res) => {
   `);
 });
 
+// Healthcheck opcional
+app.get("/health", (_req, res) => res.send("OK"));
 
 // 8) Start
-app.listen(PORT, () => console.log(`API ${PUBLIC_HOST}`));
+app.listen(PORT, () => console.log(`API ${PUBLIC_HOST} (port ${PORT})`));
+

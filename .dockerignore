@@ -1,12 +1,9 @@
 node_modules/
-uploads/
+.git
+.gitignore
 .env
 .env.*
+uploads/
 npm-debug.log*
 logs/
 *.log
-.DS_Store
-dist/
-build/
-coverage/
-.vscode/
