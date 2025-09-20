@@ -97,7 +97,7 @@ cp .env.example .env
 
 Configurar credenciales:
 ```ini
-DATABASE_URL=postgres://canelito:1234@localhost:5432/botton
+DATABASE_URL=postgres://user:contrasena@localhost:5432/botton
 R2_ENDPOINT=https://xxxx.r2.cloudflarestorage.com
 R2_ACCESS_KEY_ID=...
 R2_SECRET_ACCESS_KEY=...
@@ -172,17 +172,6 @@ Acceso:
   ```sql
   DELETE FROM images;
   TRUNCATE TABLE images RESTART IDENTITY;
-  ```
-
----
-
-## 📸 Cómo agregar el demo al README
-- **Screenshot**: guarda una captura en `docs/demo.png` y no cambies la etiqueta `<img>` de arriba.
-- **GIF** (opcional): guarda `docs/demo.gif` y cambia la etiqueta por:
-  ```md
-  <p align="center">
-    <img src="docs/demo.gif" alt="Demo del uploader (GIF)" width="900">
-  </p>
   ```
 
 ---
