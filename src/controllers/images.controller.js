@@ -32,7 +32,7 @@ export const uploadImages = async (req, res) => {
     client.release();
   }
 };
-
+//lee de la bd los metadatos y construye el url publico con r2
 export const listImages = async (req, res) => {
   try {
     const limit = Math.min(parseInt(req.query.limit || '12', 10), 100);
@@ -50,7 +50,7 @@ export const listImages = async (req, res) => {
     res.status(500).json({ error: 'db_error' });
   }
 };
-
+//responde a get/api/images/by-ids?ids=uuid, uuid2
 export const getByIds = async (req, res) => {
   try {
     const ids = String(req.query.ids || '').split(',').map(s => s.trim()).filter(Boolean);

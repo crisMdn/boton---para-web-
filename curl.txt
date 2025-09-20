@@ -1,0 +1,14 @@
+verificar:
+curl -I https://pub-86ea75d4d35d47ceafa91dc93b8aa542.r2.dev/053bb61c414920677d0326a14baf2a88.png
+
+descargar/verificar 
+curl -o test.png https://pub-86ea75d4d35d47ceafa91dc93b8aa542.r2.dev/053bb61c414920677d0326a14baf2a88.png
+
+esta opcion seria desde la BS
+SELECT status, content_type
+FROM http_get('https://pub-86ea75d4d35d47ceafa91dc93b8aa542.r2.dev/053bb61c414920677d0326a14baf2a88.png');
+
+este ultimo no funciona por que se necesita una extension llamada postgresql-http, el cual esta para linux pero para window no se recomienda 
+
+
+esta url es la imagen de los mormones xd

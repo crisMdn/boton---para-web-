@@ -9,3 +9,6 @@ router.get('/images', listImages);
 router.get('/images/by-ids', getByIds);
 
 export default router;
+
+
+//contruccion de las rutas para los llamados
