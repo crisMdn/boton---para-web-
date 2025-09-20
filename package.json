@@ -3,23 +3,18 @@
   "version": "1.0.0",
   "description": "API modular para subir y listar imágenes (Express + Multer + Postgres)",
   "type": "module",
-  "main": "index.js",
+  "main": "src/server.js",
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js",
+    "start": "node src/server.js",
+    "dev": "nodemon --watch src --ext js,mjs,cjs,json src/server.js",
+    "db:init": "psql \"$DATABASE_URL\" -f postgre/create_images.sql",
     "test": "echo \"No tests\" && exit 0"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/crisMdn/boton---para-web-.git"
   },
-  "keywords": [
-    "express",
-    "api",
-    "uploads",
-    "multer",
-    "postgres"
-  ],
+  "keywords": ["express", "api", "uploads", "multer", "postgres"],
   "author": "",
   "license": "ISC",
   "bugs": {
@@ -28,7 +23,6 @@
   "homepage": "https://github.com/crisMdn/boton---para-web-#readme",
   "dependencies": {
     "@aws-sdk/client-s3": "^3.890.0",
-    "aws-sdk": "^2.1692.0",
     "cors": "^2.8.5",
     "dotenv": "^16.6.1",
     "express": "^5.1.0",
@@ -37,5 +31,6 @@
   },
   "devDependencies": {
     "nodemon": "^3.1.10"
-  }
+  },
+  "_comentario": "Usa src/server.js. Asegúrate que el SQL esté en postgre/create_images.sql."
 }
